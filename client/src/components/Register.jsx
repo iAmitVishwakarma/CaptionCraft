@@ -7,6 +7,8 @@ const Register = ({ onSwitchToLogin }) => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
+const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -14,7 +16,7 @@ const Register = ({ onSwitchToLogin }) => {
     setSuccess('');
 
 try {
-  const response = await fetch('/api/auth/register', {
+  const response = await fetch(`${BASE_URL}/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
