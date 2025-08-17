@@ -10,7 +10,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: "https://captioncraft-ai.onrender.com/", // 
+  origin: 'https://captioncraft-ai.onrender.com' , // 
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
