@@ -12,11 +12,13 @@ function App() {
   const [error, setError] = useState('');
   const [view, setView] = useState('login'); // 'login', 'register', 'main'
 
+const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
+
   // This effect checks if the user is authenticated on page load.
   useEffect(() => {
     const checkAuth = async () => {
       try {
-       const response = await fetch('/api/auth/check', {
+       const response = await fetch(`${BASE_URL}/auth/check`, {
           method: 'GET',
           credentials: 'include'
         });
@@ -53,7 +55,7 @@ function App() {
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await fetch('/api/posts/', {
+      const response = await fetch(`${BASE_URL}/posts/`, {
         method: 'POST',
         body: formData,
         credentials: 'include' 
