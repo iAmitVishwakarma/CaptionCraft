@@ -16,7 +16,7 @@ function App() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/posts/', {
+        const response = await fetch('/api/posts/', {
           method: 'POST',
           credentials: 'include'
         });
@@ -53,7 +53,7 @@ function App() {
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await fetch('http://localhost:3000/api/posts/', {
+      const response = await fetch('/api/posts/', {
         method: 'POST',
         body: formData,
         credentials: 'include' 
