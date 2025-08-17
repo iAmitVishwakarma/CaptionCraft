@@ -16,8 +16,8 @@ function App() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('/api/posts/', {
-          method: 'POST',
+       const response = await fetch('/api/auth/check', {
+          method: 'GET',
           credentials: 'include'
         });
         if (response.ok) {
@@ -40,9 +40,9 @@ function App() {
   };
 
   const handleLogout = () => {
-    // A real app might have a server-side logout route to clear cookies
     setView('login');
     setCaption('');
+    setError('');
   };
 
   const generateCaption = async (file) => {
