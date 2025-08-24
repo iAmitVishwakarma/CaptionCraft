@@ -1,39 +1,32 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 
-const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const Login = ({ onLoginSuccess, onSwitchToRegister , BASE_URL }) => {
+ const [user, setUser] = useState({
+    username: "",
+    password: "",
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    try {
-      const response = await fetch(`${BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ username, password }),
+    // try {
+      const response = await axios.post(`${BASE_URL}/auth/login`, { ...user},
+      {withCredentials: true})
+      .then((res) => {
+        if (res.status == 200) {
+           setTimeout(() => { onLoginSuccess()}, 1000);
+           setLoading(true);
+        }
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+        setLoading(false);
       });
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.message || 'Login failed');
-      }
-      onLoginSuccess();
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -43,16 +36,16 @@ const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
         <input
           type="text"
           placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={user.username}
+          onChange={(e) => setUser({ ...user, username: e.target.value })}
           className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
           required
         />
         <input
           type="password"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={user.password}
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
           className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
           required
         />

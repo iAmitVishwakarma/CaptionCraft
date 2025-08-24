@@ -43,7 +43,7 @@ async function loginController(req,res) {
 
 if(!user){
     return res.status(400).json({
-    message : " username is not found " ,
+    message : "Username is not found" ,
 })
 }
 
@@ -52,7 +52,7 @@ const isPasswordValid = await bcrypt.compare(password, user.password)
 
  if(!isPasswordValid){
     return res.status(400).json({
-    message : " password is not match " ,
+    message : "Password is not match" ,
 })
  }
 
@@ -64,7 +64,7 @@ const token = jwt.sign(
 res.cookie('token',token)
 
 res.status(200).json({
-    message : " user login succesfully" ,
+    message : "User login succesfully" ,
     user : {
         id: user._id,
         username: user.username

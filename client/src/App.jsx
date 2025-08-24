@@ -4,36 +4,38 @@ import {CaptionDisplay} from './components/CaptionDisplay';
 import {DragAndDropUploader} from './components/DragAndDropUploader';
 import Login from './components/Login';
 import Register from './components/Register';
+import axios from 'axios';
 
 function App() {
+const BASE_URL = 'http://localhost:3000/api';
+
+
   const [imageFile, setImageFile] = useState(null);
   const [caption, setCaption] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [view, setView] = useState('login'); // 'login', 'register', 'main'
 
-const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
+
 
   // This effect checks if the user is authenticated on page load.
   useEffect(() => {
     const checkAuth = async () => {
       try {
-       const response = await fetch(`${BASE_URL}/auth/check`, {
-          method: 'GET',
-          credentials: 'include'
-        });
-        if (response.ok) {
-          setView('main');
-        } else {
-          setView('login');
-        }
-      } catch (e) {
-        setView('login');
-      }
-    };
-    checkAuth();
-  }, []);
+       const response = await axios.get(`${BASE_URL}/auth/check`, { withCredentials: true });
+       if (response.status === 200) {
+         setView('main');
+       } else {
+         setView('login');
+       }
+     } catch (e) {
+       setView('login');
+     }
+   };
+   checkAuth();
+ }, []);
 
+    
   const handleFileSelect = (file) => {
     setImageFile(file);
     setCaption('');
@@ -51,40 +53,31 @@ const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
     setLoading(true);
     setError('');
     
-    try {
+    // try {
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await fetch(`${BASE_URL}/posts/`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include' 
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          setError('Session expired. Please log in again.');
-          handleLogout();
+      const response = await axios.post(`${BASE_URL}/posts`, formData, {
+        withCredentials: true
+      }).then((res) => {
+        if (res.status === 201) {
+          setCaption(res.data.data.caption);
+          console.log(caption);
         } else {
-          const errData = await response.json();
-          throw new Error(errData.message || 'Failed to generate caption.');
+          throw new Error(res.data.message || 'Failed to generate caption.');
         }
-      }
-      const data = await response.json();
-      setCaption(data.data.caption);
-    } catch (e) {
-      console.error(e);
-      setError(e.message || 'An unexpected error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+      }).catch((err) => {
+        setError(err.message || 'An unexpected error occurred. Please try again.');
+      }).finally(() => {
+        setLoading(false);
+      });
   };
 
   const renderContent = () => {
     if (view === 'login') {
-      return <Login onLoginSuccess={() => setView('main')} onSwitchToRegister={() => setView('register')} />;
+      return <Login BASE_URL={BASE_URL} onLoginSuccess={() => setView('main')} onSwitchToRegister={() => setView('register')} />;
     } else if (view === 'register') {
-      return <Register onSwitchToLogin={() => setView('login')} />;
+      return <Register BASE_URL={BASE_URL} onSwitchToLogin={() => setView('main')} />;
     } else {
       return (
         <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-2xl">
