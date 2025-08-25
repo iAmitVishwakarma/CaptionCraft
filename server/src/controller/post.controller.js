@@ -7,16 +7,24 @@ async function createPostController(req, res) {
   try {
     const file = req.file;
 
+    if (!file) {
+      return res.status(400).json({ message: "No image file uploaded" });
+    }
+
     const base64ImageFile = Buffer.from(file.buffer).toString("base64");
 
-    const Caption = await generateCaption(base64ImageFile);
+    const Caption1 = await generateCaption(base64ImageFile);
+    const Caption2 = await generateCaption(base64ImageFile);
 
     const uploadResult = await uploadImage(file.buffer, `${uuid()}`);
 
     const post = await postModel.create({
-      userId: req.user.id,        
-      caption: Caption,         
-      image: uploadResult.url,   
+      userId: req.user._id,
+      captions: {
+        Caption1,
+        Caption2
+      },
+      image: uploadResult.url,
     });
 
     res.status(201).json({

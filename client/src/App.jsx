@@ -7,7 +7,7 @@ import Register from './components/Register';
 import axios from 'axios';
 
 function App() {
-const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
+const BASE_URL = 'http://localhost:3000/api';
 
 
   const [imageFile, setImageFile] = useState(null);
@@ -35,43 +35,54 @@ const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
    checkAuth();
  }, []);
 
-    
-  const handleFileSelect = (file) => {
-    setImageFile(file);
-    setCaption('');
-    setError('');
-    generateCaption(file);
-  };
-
-  const handleLogout = () => {
+   const handleLogout = () => {
     setView('login');
     setCaption('');
     setError('');
-  };
+  }; 
+  
+  
+ const handleFileSelect = (file) => {
+  if (!file || !file.type.startsWith('image/')) {
+    setError('Please upload a valid image file.');
+    return;
+  }
 
-  const generateCaption = async (file) => {
-    setLoading(true);
-    setError('');
-    
-    // try {
-      const formData = new FormData();
-      formData.append('image', file);
-console.log(file);
+  setImageFile(file);
+  setCaption('');
+  setError('');
+  generateCaption(file);
+};
 
-      const response = await axios.post(`${BASE_URL}/posts`, formData, {
-        withCredentials: true
-      }).then((res) => {
-        if (res.status === 201) {
-          setCaption(res.data.data.caption);
-        } else {
-          throw new Error(res.data.message || 'Failed to generate caption.');
-        }
-      }).catch((err) => {
-        setError(err.message || 'An unexpected error occurred. Please try again.');
-      }).finally(() => {
-        setLoading(false);
-      });
-  };
+const generateCaption = async (file) => {
+  setLoading(true);
+  setError('');
+
+  try {
+    const formData = new FormData();
+    formData.append('image', file); // 👈 Matches Postman key
+
+    const response = await axios.post(`${BASE_URL}/posts`, formData, {
+      withCredentials: true, 
+      headers: {
+        'Content-Type': 'multipart/form-data', 
+      },
+    });
+
+   
+
+    if (response.status === 201) {
+      setCaption(response.data.data.captions);
+    } else {
+      throw new Error(response.data.message || 'Failed to generate caption.');
+    }
+  } catch (err) {
+    setError(err.message || 'An unexpected error occurred. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const renderContent = () => {
     if (view === 'login') {
@@ -83,7 +94,7 @@ console.log(file);
         <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-2xl">
           <div className="flex justify-between items-center mb-6">
              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
-               CaptionCraft 🎨
+       CaptionCraft 🎨
              </h1>
              <button
                 onClick={handleLogout}
@@ -95,7 +106,8 @@ console.log(file);
           <DragAndDropUploader onFileSelect={handleFileSelect} />
           <div className="mt-6 flex flex-col items-center">
             {loading && <LoadingSpinner />}
-            {!loading && <CaptionDisplay caption={caption} error={error} />}
+            {!loading && <CaptionDisplay caption={caption.Caption1} error={error} />}
+            {!loading && !error ? <CaptionDisplay caption={caption.Caption2} error={error} /> : <></>}
           </div>
         </div>
       );
