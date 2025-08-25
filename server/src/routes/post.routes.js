@@ -10,7 +10,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 const { createPostController } = require("../controller/post.controller");
 const routes = express.Router();
 
-routes.post("/", authMiddleware,  upload.single('image'), createPostController);
+routes.post("/",  upload.single('image'), createPostController);
 
 
 
