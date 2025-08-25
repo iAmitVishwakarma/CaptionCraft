@@ -11,6 +11,6 @@ const routes = express.Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-routes.post("/", authMiddleware, upload.single("image"), createPostController);
+routes.post("/", upload.single("image"), createPostController);
 
 module.exports = routes;

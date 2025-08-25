@@ -14,9 +14,9 @@ async function createPostController(req, res) {
     const uploadResult = await uploadImage(file.buffer, `${uuid()}`);
 
     const post = await postModel.create({
-      userId: req.user.id,         // ✅ match schema
-      caption: Caption,          // ✅ match schema
-      image: uploadResult.url,   // ✅ match schema
+      userId: req.user.id,        
+      caption: Caption,         
+      image: uploadResult.url,   
     });
 
     res.status(201).json({

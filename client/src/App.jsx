@@ -56,6 +56,7 @@ const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
     // try {
       const formData = new FormData();
       formData.append('image', file);
+console.log(file);
 
       const response = await axios.post(`${BASE_URL}/posts`, formData, {
         withCredentials: true
