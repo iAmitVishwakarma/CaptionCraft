@@ -7,7 +7,7 @@ import Register from './components/Register';
 import axios from 'axios';
 
 function App() {
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
 
 
   const [imageFile, setImageFile] = useState(null);
@@ -68,8 +68,6 @@ const generateCaption = async (file) => {
         'Content-Type': 'multipart/form-data', 
       },
     });
-
-   
 
     if (response.status === 201) {
       setCaption(response.data.data.captions);
