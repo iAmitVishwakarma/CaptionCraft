@@ -63,7 +63,6 @@ console.log(file);
       }).then((res) => {
         if (res.status === 201) {
           setCaption(res.data.data.caption);
-          console.log(caption);
         } else {
           throw new Error(res.data.message || 'Failed to generate caption.');
         }
