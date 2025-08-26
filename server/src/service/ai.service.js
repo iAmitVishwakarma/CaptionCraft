@@ -1,4 +1,3 @@
-// src/service/ai.service.js
 const { GoogleGenerativeAI } = require("@google/genai");
 
 // Make sure to set the GOOGLE_API_KEY environment variable on your Render dashboard.
