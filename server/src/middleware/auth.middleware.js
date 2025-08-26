@@ -3,9 +3,11 @@ const userModel = require('../models/user.model');
 
 
 async function authMiddleware(req, res, next) {
+  console.log("Auth middleware called, checking token...");
   const token = req.cookies.token;
 
   if (!token) {
+    console.log("No token found, returning unauthorized");
     return res.status(401).json({ error: "Unauthorized" });
   }
 
