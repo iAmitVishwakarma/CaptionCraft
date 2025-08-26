@@ -13,23 +13,20 @@ console.log("AI service called with image data length:", base64ImageFile?.length
       },
       { text: "Caption this image." },
     ];
-
-    const model = await ai.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      generationConfig: {
-        systemInstruction: `
-          Create a visually appealing and descriptive caption for this image.
+         const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: contents,
+        config: {
+         systemInstruction: `
+         Create a visually appealing and descriptive caption for this image.
           Guidelines:
-          - Keep it short and elegant (max 10 words)
-          - Add emojis that match the mood or theme
-          - Include relevant hashtags to boost discoverability
-        `,
-      },
-    });
+            - Keep it short and elegant (max 10 words)
+            - Add emojis that match the mood or theme
+            - Include relevant hashtags to boost discoverability
+         `,}
+      });
 
-    const response = await model.generateContent({ contents });
-
-    return response.response.text();
+  return response.text;
   } catch (error) {
     console.error("Error generating caption:", error);
     throw new Error("Failed to generate caption from AI service.");
