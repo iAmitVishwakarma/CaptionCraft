@@ -7,7 +7,7 @@ import Register from './components/Register';
 import axios from 'axios';
 
 function App() {
-const BASE_URL = 'https://captioncraft-cx47.onrender.com/api';
+const BASE_URL = 'https://captioncraft-pqdi.onrender.com/api';
 
 
   const [imageFile, setImageFile] = useState(null);
