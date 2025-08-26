@@ -31,7 +31,7 @@ async function createPostController(req, res) {
     const uploadResult = await uploadImage(file.buffer, `${uuid()}`);
 
     const post = await postModel.create({
-      userId: req.user._id,
+     // userId: req.user._id,
       captions: {
         Caption1,
         Caption2
