@@ -1,9 +1,9 @@
 const { GoogleGenAI } = require("@google/genai");
 
 async function generateCaption(base64ImageFile) {
+console.log("AI service called with image data length:", base64ImageFile?.length || 0);
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
-
+    const ai = new GoogleGenAI({});
     const contents = [
       {
         inlineData: {
@@ -14,8 +14,8 @@ async function generateCaption(base64ImageFile) {
       { text: "Caption this image." },
     ];
 
-    const model = ai.getGenerativeModel({
-      model: "gemini-1.5-flash",
+    const model = await ai.getGenerativeModel({
+      model: "gemini-2.0-flash",
       generationConfig: {
         systemInstruction: `
           Create a visually appealing and descriptive caption for this image.
