@@ -2,6 +2,15 @@ const userModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+const cookieOptions = {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+};
+
+
+
+
 async function registerController(req,res){
 const {username,password} = req.body;
 
@@ -26,7 +35,7 @@ const token = jwt.sign({
 },process.env.JWT_Secret_Key)
 
 
-res.cookie('token',token)
+res.cookie('token', token, cookieOptions);
 
 res.status(201).json({
     message : " user create succesfully" ,
@@ -61,7 +70,7 @@ const token = jwt.sign(
     process.env.JWT_Secret_Key,
 )
 
-res.cookie('token',token)
+res.cookie('token', token, cookieOptions);
 
 res.status(200).json({
     message : "User login succesfully" ,
