@@ -1,10 +1,9 @@
 const { GoogleGenAI } = require("@google/genai");
-// Make sure to set the GOOGLE_API_KEY environment variable on your Render dashboard.
-// Without this, the application will not be able to authenticate with the AI service.
-const ai = new GoogleGenAI(process.env.GOOGLE_API_KEY);
 
 async function generateCaption(base64ImageFile) {
   try {
+    const ai = new GoogleGenAI({process.env.GOOGLE_API_KEY});
+
     const contents = [
       {
         inlineData: {
@@ -33,7 +32,6 @@ async function generateCaption(base64ImageFile) {
     return response.response.text();
   } catch (error) {
     console.error("Error generating caption:", error);
-    // You can throw the error or return a specific message
     throw new Error("Failed to generate caption from AI service.");
   }
 }
