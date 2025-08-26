@@ -1,7 +1,7 @@
-const { GoogleGenerativeAI } = require("@google/genai");
+const { GoogleGenAI } = require("@google/genai");
 // Make sure to set the GOOGLE_API_KEY environment variable on your Render dashboard.
 // Without this, the application will not be able to authenticate with the AI service.
-const ai = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const ai = new GoogleGenAI(process.env.GOOGLE_API_KEY);
 
 async function generateCaption(base64ImageFile) {
   try {
