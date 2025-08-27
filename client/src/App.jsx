@@ -86,7 +86,7 @@ const generateCaption = async (file) => {
     if (view === 'login') {
       return <Login BASE_URL={BASE_URL} onLoginSuccess={() => setView('main')} onSwitchToRegister={() => setView('register')} />;
     } else if (view === 'register') {
-      return <Register BASE_URL={BASE_URL} onSwitchToLogin={() => setView('main')} />;
+      return <Register BASE_URL={BASE_URL} onSwitchToLogin={() => setView('login')} />;
     } else {
       return (
         <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-2xl">
