@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { AuthLayout } from "./AuthLayout";
 import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 
-const Login = ({ onLoginSuccess, onSwitchToRegister, BASE_URL }) => {
+const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
   const [user, setUser] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ const Login = ({ onLoginSuccess, onSwitchToRegister, BASE_URL }) => {
 
     try {
       const response = await axios.post(
-        'api/auth/login',
+        "/api/auth/login",
         { ...user },
         { withCredentials: true }
       );

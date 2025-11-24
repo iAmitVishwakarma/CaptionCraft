@@ -12,7 +12,6 @@ const Dashboard = lazy(() =>
 );
 
 function App() {
-
   const [imageFile, setImageFile] = useState(null);
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,7 +25,7 @@ function App() {
 
   const checkAuth = async () => {
     try {
-      const response = await axios.get('api/auth/check', {
+      const response = await axios.get("/api/auth/check", {
         withCredentials: true,
       });
       if (response.status === 200) {
@@ -47,7 +46,7 @@ function App() {
   const fetchHistory = async () => {
     setLoadingHistory(true);
     try {
-      const res = await axios.get('api/posts/history', {
+      const res = await axios.get("/api/posts/history", {
         withCredentials: true,
       });
       if (res.data && res.data.data) {
@@ -90,7 +89,7 @@ function App() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await axios.post('api/posts', formData, {
+      const response = await axios.post("/api/posts", formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -126,9 +125,7 @@ function App() {
         />
       )}
       {view === "register" && (
-        <Register
-          onSwitchToLogin={() => setView("login")}
-        />
+        <Register onSwitchToLogin={() => setView("login")} />
       )}
       {view === "main" && (
         <Dashboard
