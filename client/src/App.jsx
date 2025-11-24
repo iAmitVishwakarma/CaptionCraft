@@ -118,7 +118,6 @@ function App() {
     <Suspense fallback={<LoadingFallback />}>
       {view === "login" && (
         <Login
-          BASE_URL={BASE_URL}
           onLoginSuccess={() => {
             setView("main");
             fetchHistory();
@@ -128,7 +127,6 @@ function App() {
       )}
       {view === "register" && (
         <Register
-          BASE_URL={BASE_URL}
           onSwitchToLogin={() => setView("login")}
         />
       )}
