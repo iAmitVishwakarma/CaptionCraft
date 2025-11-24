@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { AuthLayout } from "./AuthLayout";
-import { AuthForm } from "./AuthForm"; // Import the shared component
+import { AuthForm } from "./AuthForm";
+import api from "../../api/axios";
+
 
 const Register = ({ onSwitchToLogin }) => {
   const [values, setValues] = useState({ username: "", password: "" });
@@ -19,9 +20,9 @@ const Register = ({ onSwitchToLogin }) => {
     setLoading(true);
     setError("");
     setSuccess("");
-// console.log(values);  
+
     try {
-      const response = await axios.post("/api/auth/register",values,{ withCredentials: true });
+      const response = await api.post("/auth/register", values);
 
       if (response.status === 201) {
         setSuccess("Account created successfully! Redirecting...");
@@ -43,7 +44,6 @@ const Register = ({ onSwitchToLogin }) => {
     >
       <Helmet>
         <title>Sign Up - CaptionCraft</title>
-        {/* ... existing meta tags ... */}
       </Helmet>
 
       <AuthForm 

@@ -1,7 +1,9 @@
 import React, { useState, useEffect, Suspense, lazy } from "react";
 import { LoadingSpinner } from "./components/LoadingSpinner";
-import axios from "axios";
+import api from "../api/axios";
 
+
+// Lazy load components
 const Login = lazy(() => import("./components/Login"));
 const Register = lazy(() => import("./components/Register"));
 const Dashboard = lazy(() =>
@@ -11,24 +13,20 @@ const Dashboard = lazy(() =>
 );
 
 function App() {
-  const [view, setView] = useState("loading"); // Default to loading
+  const [view, setView] = useState("loading");
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   
-  // History State
   const [history, setHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [showHistoryMobile, setShowHistoryMobile] = useState(false);
 
   const checkAuth = async () => {
     try {
-      const response = await axios.get("/api/auth/check", {
-        withCredentials: true,
-      });
+      const response = await api.get("/auth/check");
       
-      // CRITICAL SECURITY FIX: Ensure we actually got a JSON response with user data
-      // This prevents "index.html" 200 OK responses from logging people in.
+      // Strict check: Status 200 AND specific success message
       if (response.status === 200 && response.data && response.data.message === "Authenticated") {
         setView("main");
         fetchHistory();
@@ -47,9 +45,7 @@ function App() {
   const fetchHistory = async () => {
     setLoadingHistory(true);
     try {
-      const res = await axios.get("/api/posts/history", {
-        withCredentials: true,
-      });
+      const res = await api.get("/posts/history");
       if (res.data && res.data.data) {
         setHistory(res.data.data);
       }
@@ -61,11 +57,10 @@ function App() {
   };
 
   const handleLogout = () => {
-     // Clear cookie logic should ideally be an API call, assuming cookie is httpOnly
-     // For now, we update state.
     setView("login");
     setCaption("");
     setHistory([]);
+    // Optional: Call logout API if you implement it backend side to clear cookies
   };
 
   const handleFileSelect = (file) => {
@@ -89,8 +84,7 @@ function App() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await axios.post("/api/posts", formData, {
-        withCredentials: true,
+      const response = await api.post("/posts", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -101,7 +95,6 @@ function App() {
         throw new Error(response.data.message || "Failed to generate caption.");
       }
     } catch (err) {
-      // If 401, redirect to login
       if (err.response && err.response.status === 401) {
           setView("login");
       }

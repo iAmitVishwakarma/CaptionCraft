@@ -1,8 +1,9 @@
-import axios from "axios";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { AuthLayout } from "./AuthLayout";
-import { AuthForm } from "./AuthForm"; // Import the shared component
+import { AuthForm } from "./AuthForm";
+import api from "../../api/axios";
+
 
 const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
   const [values, setValues] = useState({ username: "", password: "" });
@@ -17,17 +18,25 @@ const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-// console.log(values);
+
     try {
-      const response = await axios.post("/api/auth/login", values, { withCredentials: true });
-      console.log(response);
-      if (response.status === 200) {
+      // Use the 'api' instance instead of direct axios
+      const response = await api.post("/auth/login", values); // Note: '/auth/login' because baseURL includes '/api'
+
+      // SECURITY FIX: Check for actual user data, not just status 200.
+      // If the proxy fails and returns HTML (200 OK), response.data.user will be undefined.
+      if (response.status === 200 && response.data && response.data.user) {
         setTimeout(() => onLoginSuccess(), 800);
+      } else {
+        throw new Error("Invalid response from server");
       }
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Something went wrong. Please try again."
-      );
+      // Handle specific error messages from backend
+      const errorMessage = 
+        err.response?.data?.message || 
+        "Invalid username or password."; // Default fallback
+      
+      setError(errorMessage);
       setLoading(false);
     }
   };
@@ -39,7 +48,6 @@ const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
     >
       <Helmet>
         <title>Login - CaptionCraft</title>
-        {/* ... existing meta tags ... */}
       </Helmet>
 
       <AuthForm 
