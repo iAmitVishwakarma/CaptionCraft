@@ -29,7 +29,7 @@ export const AuthForm = ({
               name="username"
               value={values.username}
               onChange={onChange}
-              className="block w-fullQl pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none bg-white"
+              className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none bg-white"
               placeholder={isLogin ? "Enter your username" : "e.g. creative_mind"}
               required
             />

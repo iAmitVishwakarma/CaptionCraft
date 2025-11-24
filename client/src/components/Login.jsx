@@ -25,9 +25,10 @@ const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
         { withCredentials: true }
       );
 
-      if (response.status === 200) {
-        setTimeout(() => onLoginSuccess(), 800);
-      }
+      console.log(response);
+      // if (response.status === 200) {
+      //   setTimeout(() => onLoginSuccess(), 800);
+      // }
     } catch (err) {
       setError(
         err.response?.data?.message || "Something went wrong. Please try again."
