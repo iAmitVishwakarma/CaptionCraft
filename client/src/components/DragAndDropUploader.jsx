@@ -1,5 +1,5 @@
-// src/components/DragAndDropUploader.jsx
 import React, { useState } from 'react';
+import { UploadCX, Image as ImageIcon, X } from 'lucide-react'; 
 
 export const DragAndDropUploader = ({ onFileSelect }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -10,70 +10,66 @@ export const DragAndDropUploader = ({ onFileSelect }) => {
     setIsDragging(true);
   };
 
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      onFileSelect(file);
-      const fileUrl = URL.createObjectURL(file);
-      setPreview(fileUrl);
-    }
+    processFile(file);
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    processFile(e.target.files[0]);
+  };
+
+  const processFile = (file) => {
     if (file && file.type.startsWith('image/')) {
       onFileSelect(file);
-      const fileUrl = URL.createObjectURL(file);
-      setPreview(fileUrl);
+      setPreview(URL.createObjectURL(file));
     }
   };
 
+  const clearImage = (e) => {
+    e.stopPropagation();
+    setPreview(null);
+    onFileSelect(null); // You might need to handle null in parent
+  }
+
   return (
     <div
-      className={`relative w-full p-6 border-2 border-dashed rounded-lg cursor-pointer transition-all duration-300 ${
-        isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-500'
-      }`}
+      className={`relative group w-full h-64 border-2 border-dashed rounded-2xl transition-all duration-300 flex flex-col items-center justify-center cursor-pointer overflow-hidden
+        ${isDragging 
+          ? 'border-blue-500 bg-blue-50/50 scale-[1.02]' 
+          : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-gray-50'
+        }`}
       onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
+      onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
       onClick={() => document.getElementById('file-input').click()}
     >
-      <input
-        id="file-input"
-        type="file"
-        accept="image/*"
-        onChange={handleFileChange}
-        className="hidden"
-      />
+      <input id="file-input" type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+      
       {preview ? (
-        <img
-          src={preview}
-          alt="Image preview"
-          className="w-full h-auto max-h-96 object-contain rounded-lg shadow-md mx-auto"
-        />
-      ) : (
-        <div className="flex flex-col items-center text-center text-gray-500">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-12 w-12 mb-2 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <>
+          <img src={preview} alt="Preview" className="w-full h-full object-contain p-2" />
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <p className="text-white font-medium flex items-center gap-2">
+              <Upload size={20} /> Change Image
+            </p>
+          </div>
+          <button 
+            onClick={clearImage}
+            className="absolute top-3 right-3 p-1 bg-white rounded-full shadow-md text-gray-500 hover:text-red-500 z-10"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-            />
-          </svg>
-          <span className="font-medium text-gray-700">Drag & drop your image here, or click to browse</span>
+            <X size={16} />
+          </button>
+        </>
+      ) : (
+        <div className="text-center p-6 transition-transform duration-300 group-hover:scale-105">
+          <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <ImageIcon size={32} />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-700">Upload an image</h3>
+          <p className="text-gray-400 mt-2 text-sm">Drag and drop or click to browse</p>
         </div>
       )}
     </div>
