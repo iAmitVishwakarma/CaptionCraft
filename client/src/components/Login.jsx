@@ -17,18 +17,13 @@ const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
+// console.log(values);
     try {
-      const response = await axios.post(
-        "/api/auth/login",
-        values,
-        { withCredentials: true }
-      );
-
+      const response = await axios.post("/api/auth/login", values, { withCredentials: true });
       console.log(response);
-      // if (response.status === 200) {
-      //   setTimeout(() => onLoginSuccess(), 800);
-      // }
+      if (response.status === 200) {
+        setTimeout(() => onLoginSuccess(), 800);
+      }
     } catch (err) {
       setError(
         err.response?.data?.message || "Something went wrong. Please try again."

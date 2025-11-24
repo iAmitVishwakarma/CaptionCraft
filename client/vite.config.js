@@ -9,6 +9,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: "https://captioncraft-pqdi.onrender.com",
+        // target: "http://localhost:3000",
         changeOrigin: true,
         secure: false,
       },

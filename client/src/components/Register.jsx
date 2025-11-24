@@ -19,13 +19,9 @@ const Register = ({ onSwitchToLogin }) => {
     setLoading(true);
     setError("");
     setSuccess("");
-
+// console.log(values);  
     try {
-      const response = await axios.post(
-        "/api/auth/register",
-        values,
-        { withCredentials: true }
-      );
+      const response = await axios.post("/api/auth/register",values,{ withCredentials: true });
 
       if (response.status === 201) {
         setSuccess("Account created successfully! Redirecting...");
