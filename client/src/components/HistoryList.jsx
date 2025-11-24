@@ -1,7 +1,6 @@
-import React from 'react';
 import { Copy, Clock, Image as ImageIcon } from 'lucide-react';
 
-export const HistoryList =dX ({ history, isLoading }) => {
+export const HistoryList = ({ history, isLoading }) => {
   if (isLoading) {
     return <div className="text-center text-gray-500 py-10">Loading history...</div>;
   }
@@ -16,7 +15,7 @@ export const HistoryList =dX ({ history, isLoading }) => {
   }
 
   return (
-    <div className="space-y-6 overflow-y-auto h-full pr-2 custom-scrollbar">
+    <div className="space-y-6 overflow-y-auto lg:h-[calc(100vh-14rem)] h-[calc(100vh-6rem)] pr-2 custom-scrollbar">
       {history.map((post) => (
         <div key={post._id} className="bg-white/50 backdrop-blur-sm border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 group">
           <div className="flex gap-4 items-start">

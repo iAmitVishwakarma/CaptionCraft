@@ -1,14 +1,14 @@
-import React from 'react';
+import { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 
 export const CaptionDisplay = ({ caption, error }) => {
-   const [copied, setCopied] = React.useState(false);
+   const [copied, setCopied] = useState(false);
 
    if (error) return null;
    if (!caption) return null;
 
    const handleCopy = () => {
-      navigator.clipboard.writeText(caption);
+      navigator.clipboard.writeText(caption); 
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
    };

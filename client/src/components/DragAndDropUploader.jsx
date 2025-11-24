@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { UploadCX, Image as ImageIcon, X } from 'lucide-react'; 
+import { useState } from 'react';
+import { Upload, Image as ImageIcon, X } from 'lucide-react'; 
 
-export const DragAndDropUploader = ({ onFileSelect }) => {
+export const DragAndDropUploader = ({ onFileSelect , setCaption}) => {
   const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState(null);
 
@@ -32,6 +32,7 @@ export const DragAndDropUploader = ({ onFileSelect }) => {
     e.stopPropagation();
     setPreview(null);
     onFileSelect(null); // You might need to handle null in parent
+    setCaption('')
   }
 
   return (

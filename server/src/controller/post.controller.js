@@ -8,7 +8,7 @@ async function createPostController(req, res) {
     console.log("Incoming request:", {
       hasFile: !!req.file,
       hasUser: !!req.user,
-      userId: req.user?._id
+      userId: req.user?._id,
     });
 
     const file = req.file;
@@ -20,21 +20,23 @@ async function createPostController(req, res) {
     const base64ImageFile = Buffer.from(file.buffer).toString("base64");
     console.log("Image converted to base64, length:", base64ImageFile.length);
 
-    console.log("Calling AI service for Caption1...");
-    const Caption1 = await generateCaption(base64ImageFile);
-    console.log("Caption1 generated:", Caption1);
-    
-    console.log("Calling AI service for Caption2...");
-    const Caption2 = await generateCaption(base64ImageFile);
-    console.log("Caption2 generated:", Caption2);
+    console.log(
+      "Starting parallel processing: AI Caption Generation + Image Upload"
+    );
 
-    const uploadResult = await uploadImage(file.buffer, `${uuid()}`);
+    const [captions, uploadResult] = await Promise.all([
+      generateCaption(base64ImageFile),
+      uploadImage(file.buffer, `${uuid()}`),
+    ]);
+
+    console.log("Parallel processing completed");
+    console.log("Captions generated:", captions);
 
     const post = await postModel.create({
-     userId: req.user._id,
+      userId: req.user._id,
       captions: {
-        Caption1,
-        Caption2
+        Caption1: captions.Caption1,
+        Caption2: captions.Caption2,
       },
       image: uploadResult.url,
     });
@@ -51,7 +53,8 @@ async function createPostController(req, res) {
 
 const getHistoryController = async (req, res) => {
   try {
-    const posts = await postModel.find({ userId: req.user._id })
+    const posts = await postModel
+      .find({ userId: req.user._id })
       .sort({ createdAt: -1 }); // Newest first
 
     res.status(200).json({
@@ -64,8 +67,7 @@ const getHistoryController = async (req, res) => {
   }
 };
 
-
 module.exports = {
   createPostController,
-  getHistoryController, 
+  getHistoryController,
 };

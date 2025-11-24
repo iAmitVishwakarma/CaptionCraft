@@ -8,7 +8,7 @@ export default defineConfig({
 server: {
     proxy: {
       '/api': {
-        target: 'https://captioncraft-cx47.onrender.com/', // Replace with your deployed backend URL
+        target: 'http://localhost:3000', 
         changeOrigin: true,
         secure: false,
       },

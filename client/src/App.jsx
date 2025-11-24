@@ -6,10 +6,10 @@ import { HistoryList } from './components/HistoryList'; // Import new component
 import Login from './components/Login';
 import Register from './components/Register';
 import axios from 'axios';
-import { Sparkles, LogOut, History as HistoryIcon, LayoutGrid } from 'lucide-react';
+import {X as XIcon, Sparkles, LogOut, History as HistoryIcon, LayoutGrid } from 'lucide-react';
 
 function App() {
-  const BASE_URL = 'https://captioncraft-pqdi.onrender.com/api'; // Or your local if testing
+  const BASE_URL = 'http://localhost:3000/api'; // Or your local if testing
   // const BASE_URL = 'http://localhost:3000/api'; 
 
   const [imageFile, setImageFile] = useState(null);
@@ -154,7 +154,7 @@ function App() {
                </div>
                
                <div className="p-6 sm:p-8">
-                  <DragAndDropUploader onFileSelect={handleFileSelect} />
+                  <DragAndDropUploader onFileSelect={handleFileSelect} setCaption={setCaption} />
                   
                   <div className="mt-8 min-h-[150px]">
                     {loading && (
@@ -194,7 +194,7 @@ function App() {
                      Your History
                    </h2>
                    <button onClick={() => setShowHistoryMobile(false)} className="lg:hidden">
-                     <X size={20} />
+                     <XIcon size={20} />
                    </button>
                 </div>
                 <div className="flex-1 p-4 overflow-hidden">
