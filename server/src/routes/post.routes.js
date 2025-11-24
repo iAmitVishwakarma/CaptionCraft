@@ -7,10 +7,11 @@ const authMiddleware = require("../middleware/auth.middleware");
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
-const { createPostController } = require("../controller/post.controller");
+const { createPostController,getHistoryController } = require("../controller/post.controller");
 const routes = express.Router();
 
 routes.post("/",authMiddleware, upload.single('image'), createPostController);
+routes.get("/history", authMiddleware, getHistoryController);
 
 module.exports = routes;
 
