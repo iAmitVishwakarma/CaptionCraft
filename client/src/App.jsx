@@ -12,7 +12,6 @@ const Dashboard = lazy(() =>
 );
 
 function App() {
-  const BASE_URL = "http://localhost:3000/api"; // Or your local if testing
 
   const [imageFile, setImageFile] = useState(null);
   const [caption, setCaption] = useState("");
@@ -27,7 +26,7 @@ function App() {
 
   const checkAuth = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/auth/check`, {
+      const response = await axios.get('api/auth/check', {
         withCredentials: true,
       });
       if (response.status === 200) {
@@ -48,7 +47,7 @@ function App() {
   const fetchHistory = async () => {
     setLoadingHistory(true);
     try {
-      const res = await axios.get(`${BASE_URL}/posts/history`, {
+      const res = await axios.get('api/posts/history', {
         withCredentials: true,
       });
       if (res.data && res.data.data) {
@@ -91,7 +90,7 @@ function App() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await axios.post(`${BASE_URL}/posts`, formData, {
+      const response = await axios.post('api/posts', formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });

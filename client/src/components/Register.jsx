@@ -18,7 +18,7 @@ const Register = ({ onSwitchToLogin, BASE_URL }) => {
 
     try {
       const response = await axios.post(
-        `${BASE_URL}/auth/register`,
+        'api/auth/register',
         { ...user },
         { withCredentials: true }
       );
