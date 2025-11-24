@@ -2,7 +2,6 @@ import React, { useState, useEffect, Suspense, lazy } from "react";
 import { LoadingSpinner } from "./components/LoadingSpinner";
 import axios from "axios";
 
-// Lazy load components
 const Login = lazy(() => import("./components/Login"));
 const Register = lazy(() => import("./components/Register"));
 const Dashboard = lazy(() =>
@@ -12,12 +11,11 @@ const Dashboard = lazy(() =>
 );
 
 function App() {
-  const [imageFile, setImageFile] = useState(null);
+  const [view, setView] = useState("loading"); // Default to loading
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [view, setView] = useState("login");
-
+  
   // History State
   const [history, setHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
@@ -28,9 +26,12 @@ function App() {
       const response = await axios.get("/api/auth/check", {
         withCredentials: true,
       });
-      if (response.status === 200) {
+      
+      // CRITICAL SECURITY FIX: Ensure we actually got a JSON response with user data
+      // This prevents "index.html" 200 OK responses from logging people in.
+      if (response.status === 200 && response.data && response.data.message === "Authenticated") {
         setView("main");
-        fetchHistory(); // Fetch history when logged in
+        fetchHistory();
       } else {
         setView("login");
       }
@@ -60,7 +61,8 @@ function App() {
   };
 
   const handleLogout = () => {
-    // Ideally call logout API to clear cookie
+     // Clear cookie logic should ideally be an API call, assuming cookie is httpOnly
+     // For now, we update state.
     setView("login");
     setCaption("");
     setHistory([]);
@@ -68,14 +70,12 @@ function App() {
 
   const handleFileSelect = (file) => {
     if (!file) {
-      setImageFile(null);
       return;
     }
     if (!file.type.startsWith("image/")) {
       setError("Please upload a valid image file.");
       return;
     }
-    setImageFile(file);
     setCaption("");
     setError("");
     generateCaption(file);
@@ -94,14 +94,18 @@ function App() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (response.status === 201) {
+      if (response.status === 201 && response.data?.data) {
         setCaption(response.data.data.captions);
-        fetchHistory(); // Refresh history after generation
+        fetchHistory();
       } else {
         throw new Error(response.data.message || "Failed to generate caption.");
       }
     } catch (err) {
-      setError(err.message || "An unexpected error occurred.");
+      // If 401, redirect to login
+      if (err.response && err.response.status === 401) {
+          setView("login");
+      }
+      setError(err.response?.data?.message || err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -112,6 +116,10 @@ function App() {
       <LoadingSpinner />
     </div>
   );
+
+  if (view === "loading") {
+      return <LoadingFallback />;
+  }
 
   return (
     <Suspense fallback={<LoadingFallback />}>

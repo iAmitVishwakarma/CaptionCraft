@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Upload, Image as ImageIcon, X } from "lucide-react";
 
 export const DragAndDropUploader = ({ onFileSelect, setCaption }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -46,14 +47,15 @@ export const DragAndDropUploader = ({ onFileSelect, setCaption }) => {
       onDragOver={handleDragOver}
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
-      onClick={() => document.getElementById("file-input").click()}
-    >
+     onClick={() => fileInputRef.current.click()}
+     >
       <input
         id="file-input"
         type="file"
         accept="image/*"
         onChange={handleFileChange}
         className="hidden"
+        ref={fileInputRef}
       />
 
       {preview ? (

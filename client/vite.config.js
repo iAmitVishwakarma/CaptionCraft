@@ -11,7 +11,6 @@ export default defineConfig({
         target: "https://captioncraft-pqdi.onrender.com",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""), // Remove /api prefix if needed
       },
     },
   },
