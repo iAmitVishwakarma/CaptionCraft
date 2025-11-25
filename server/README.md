@@ -55,28 +55,6 @@ The server will run on `http://localhost:3000`
 
 Create a `.env` file in the server root directory:
 
-```env
-# Database Configuration
-MONGODB_URI=mongodb://localhost:27017/captioncraft
-# Or for MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/captioncraft
-
-# JWT Secret (use a long, random string)
-JWT_SECRET=your_super_secret_jwt_key_here
-
-# Google Gemini AI Configuration
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# ImageKit Configuration
-IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
-IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
-IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_imagekit_id
-
-# Server Configuration
-PORT=3000
-NODE_ENV=development
-```
-
 ### Getting API Keys
 
 1. **Google Gemini AI**: Get your API key from [Google AI Studio](https://ai.google.dev/)
